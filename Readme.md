@@ -1,5 +1,5 @@
 # Own Load Balancer
-Built the complete functioning load-balancer with roundrobin approach, along with continous health check
+Built the complete functioning load-balancer with roundrobin approach, along with continous server health check up
 
 ## How to try it 
 1.  Open the command line or Terminal.
@@ -13,7 +13,7 @@ Built the complete functioning load-balancer with roundrobin approach, along wit
 9.  Then send the curl request `curl http://localhost:3000` to see which server responds to your request.
 
 
-### Thinks I am planning to do in this repo
+## Thinks I am planning to do in this repo
 - [X] Create load balancer server
 - [X] create server-1 and server-2
 - [X] Create more servers and down servers to test the system
