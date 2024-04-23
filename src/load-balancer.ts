@@ -12,6 +12,7 @@ let currentServerIdx=0
 
 const balancer= httpProxy.createProxyServer({})
 
+// Check for server response
 function serverHealthCheckup(server: string){
     return new Promise((resolve)=>{
         http
@@ -28,6 +29,8 @@ function serverHealthCheckup(server: string){
     })
 }
 
+
+// Filter Healthy Severs
 async function healthChecks(){
     const healthStatus= await Promise.all(servers.map(serverHealthCheckup))
     // console.log(healthStatus) # Checking
@@ -45,11 +48,13 @@ setInterval(() => {
       })
   }, 10000) // Every 10 seconds
 
+
+// Algorithm used for balancing the load.
 function roundrobin(){
     if (availableServers.length===0){return null}
     const server=availableServers[currentServerIdx%availableServers.length]
     currentServerIdx=(currentServerIdx+1) % availableServers.length
-    console.log("New Sever:",server)
+    // console.log("New Sever:",server)
     return server
 }
 
