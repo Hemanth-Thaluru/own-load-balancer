@@ -1,5 +1,5 @@
 # Own Load Balancer
-[] Create load balancer server
-[] create server-1 and server-2
-[] Create more servers and down servers to test the system
-[] Explain about servers
+- [X] Create load balancer server
+- [X] create server-1 and server-2
+- [X] Create more servers and down servers to test the system
+- [] Explain about servers
