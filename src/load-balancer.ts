@@ -8,19 +8,21 @@ const servers=[
 ]
 
 let availableServers=[...servers]
-let currentServer=0
+let currentServerIdx=0
 
 const balancer= httpProxy.createProxyServer({})
 
 function serverHealthCheckup(server: string){
     return new Promise((resolve)=>{
-        http.get(server,(response)=>{
-            if (response.statusCode==200){
+        http
+        .get(server,(response)=>{
+            if (response.statusCode===200){
                 resolve(true)
             }else{
                 resolve(false)
             }
-        }).on('error',()=>{
+        })
+        .on('error',()=>{
             resolve(false)
         })
     })
@@ -28,14 +30,41 @@ function serverHealthCheckup(server: string){
 
 async function healthChecks(){
     const healthStatus= await Promise.all(servers.map(serverHealthCheckup))
-    availableServers=servers.filter((_,idx)=>{healthStatus[idx]})
+    // console.log(healthStatus) # Checking
+    availableServers=servers.filter((_,idx)=>healthStatus[idx])
+    // console.log(availableServers) # checking
 }
 
-setInterval(()=>{
-    healthChecks().then(()=>{
-        console.log("Health of all server checked")
-    }).
-    catch((error)=>{
-        console.log("Failed to do Health check",error)
-    })
-},10000) // For every 10000 milli secs
+setInterval(() => {
+    healthChecks()
+      .then(() => {
+        console.log('Health check performed')
+      })
+      .catch((err) => {
+        console.error('Health check failed', err)
+      })
+  }, 10000) // Every 10 seconds
+
+function roundrobin(){
+    if (availableServers.length===0){return null}
+    const server=availableServers[currentServerIdx%availableServers.length]
+    currentServerIdx=(currentServerIdx+1) % availableServers.length
+    console.log("New Sever:",server)
+    return server
+}
+
+const server=http.createServer((request,response)=>{
+    const target=roundrobin()
+
+    if(target){
+        balancer.web(request,response,{target})
+    }
+    else{
+        console.log('Else')
+        response.writeHead(502)
+        response.end("No Healthy available servers")
+    }
+})
+
+console.log('Load balancer started on port 3000')
+server.listen(3000)

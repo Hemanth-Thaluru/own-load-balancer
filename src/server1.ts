@@ -8,5 +8,5 @@ response.end(' This response is from server-1\n')
 })
 
 server1.listen(SERVER1_PORT,()=>{
-    console.log(`Server-1 is running at https://localhost:${SERVER1_PORT}\n`)
+    console.log(`Server-1 is running at http://localhost:${SERVER1_PORT}\n`)
 })
