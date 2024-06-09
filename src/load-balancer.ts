@@ -65,7 +65,7 @@ const server=http.createServer((request,response)=>{
         balancer.web(request,response,{target})
     }
     else{
-        console.log('Else')
+        // console.log('Else') # check
         response.writeHead(502)
         response.end("No Healthy available servers")
     }
